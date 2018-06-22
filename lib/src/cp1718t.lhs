@@ -1021,8 +1021,7 @@ Tal como o problema 1 definimos as funções inQTree e outQTree e os respetivos 
 
 \begin{code}
 
-inQTree (Left (a,(b,c))) = Cell a b c
-inQTree  (Right (a,(b,(c,d)))) = Block a b c d   
+inQTree = either (uncurry(uncurry Cell) . assocl) (uncurry(uncurry(uncurry Block)) . assocl . assocl)
 outQTree (Cell a b c) = i1 (a,(b,c))
 outQTree (Block a b c d) = i2 (a,(b,(c,d)))  
 baseQTree g h = (g >< id) -|- (h >< (h >< (h >< h)))
@@ -1093,11 +1092,12 @@ loop = flatq . split f g . unflatq
 \end{code}
 
 \subsection*{Problema 4}
+Tal como nos problemas 1 e 2 definimos agora para a estrutura FTree, o isomorfismo \textit {in/outFTree} e o cata, ana e hylomorfismos da mesma e ainda um bifuntor que aplica duas funções, uma para as folhas da árvore e outra para o elemento nos nodos.
+
 
 \begin{code}
 
-inFTree (Left b) = Unit b
-inFTree (Right (a,(e,d))) = Comp a e d
+inFTree = either Unit (uncurry(uncurry Comp) . assocl) 
 outFTree (Unit b) = i1 b
 outFTree (Comp a e d) = i2 (a,(e,d)) 
 
@@ -1109,11 +1109,19 @@ hyloFTree g h = cataFTree g . anaFTree h
 
 instance Bifunctor FTree where
     bimap g h = anaFTree (baseFTree g h id. outFTree)
+\end{code}
 
+
+\subsubsection{1 - generatePTree}
+
+Para gerar uma PTree através de um inteiro temos de aplicar um anamorfismo ao inteiro passado como argumento pela função. Aplicando o nosso "gene" após aplicar o \textit {outNat} ao inteiro obtemos as unidades básicas da nossa árvore e o anamorfismo trata de criar o resto dos nodos da árvore. O último quadrado terá como tamanho de lado 1, os restantes seguem o cálculo $(\sqrt{2} /2) ^ n$.
+
+\begin{code}
 generatePTree =  anaFTree(g . outNat) 
                 where g = const(1.0) -|- (split (((sqrt(2)/2) ^) . succ) (split id  id))
-                    
+\end{code}                    
 
+\begin{code}
 drawPTree = undefined 
 \end{code}
 
