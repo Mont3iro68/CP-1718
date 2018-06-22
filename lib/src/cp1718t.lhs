@@ -6,6 +6,7 @@
 \usepackage{cp1718t}
 \usepackage{subcaption}
 \usepackage{adjustbox}
+\usepackage[all]{xy}
 %================= lhs2tex=====================================================%
 %include polycode.fmt 
 %format (div (x)(y)) = x "\div " y
@@ -972,6 +973,8 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
+Neste primeiro problema, é utilizado o tipo de dados \textit{Blockchain}, o que permite criar um isomorfismo entre \textit {inBlockchain} e o \textit {OutBlockchain}, para definirmos o cata-morfismo, anamorfismo e o hylomorfismo da estrutura de dados.
+
 \begin{code}
 inBlockchain = either Bc Bcs   
 outBlockchain (Bc b) =  Left b   
@@ -980,36 +983,43 @@ recBlockchain f = id -|- (id >< f)
 cataBlockchain g = g . recBlockchain (cataBlockchain g) . outBlockchain
 anaBlockchain g = inBlockchain . recBlockchain (anaBlockchain g) . g
 hyloBlockchain h g = cataBlockchain h . anaBlockchain g
-
-
-
-allTransactions = cataBlockchain ( either (p2.p2) (conc . ((p2.p2) >< id)))
-
-ledger =  cataList(either nil (cons . ((id >< sum) >< id))) . col . cataList (either nil (conc . ((conc . (singl >< singl) . split (id >< negate . p2)  p2 . (id >< swap)) >< id))) . allTransactions 
-
-isValidMagicNr = uncurry (==) . split id nub . cataBlockchain(either (singl.p1)  (cons . (p1 >< id))) 
-
-
 \end{code}
+
+\subsubsection{1 - allTransactions}
+
+\begin{code}
+allTransactions = cataBlockchain ( either (p2.p2) (conc . ((p2.p2) >< id)))
+\end{code}
+
+Para esta função utilizámos um cata-morfismo com um "gene" que nos permite retirar a lista de todas as transações da BlockChain, após a sua utilização. Para isso o "gene" apenas terá de ir a cada bloco, e obter a lista de transações de cada Bloco, e no caso de termos o tuplo compondo um bloco, e após aplicar o cata-morfismo já temos em vez da BlockChain, uma lista de transações, logo apenas temos de concatenar as duas listas presentes no tuplo com a função \textit{conc}.
+
+
+\subsubsection{2 - ledger}
+
+\begin{code}
+ledger = map (id >< sum) . col . cataList(either nil (f)) . allTransactions
+       where f = conc . ((conc . (singl >< singl) . split (id >< negate . p2) p2 . (id >< swap)) >< id)
+\end{code}
+
+A partir de uma BlockChain, é possível calcular o valor que cada entidade
+detém, tipicamente designado de ledger. Para isso primeiro aplicamos o cata-morfismo na BlockChain para obter todas as transações da mesma através da função anteriormente definida \textit{allTransactions}. Depois um cata-morfismo para obter a lista de tuplo \textit{(Entity,Value)}, ainda com Entidades repetidas e valores negativos, utilizámos a função \textit{collect} para obter uma lista de valores de cada entidade eliminando as repetidas. Tendo isto basta aplicar um $map (id * sum)$ para somar os valores de cada entidade.  
+
+
+\subsubsection{3 - isValidMagicNr}
+Para verificar se não existem MagicNr repitidos na BlockChain, começámos por aplicar um cata-morfismo para obter a lista de MagicNr da mesma. Depois aplicamos um \textit{split id nub} e verificamos a diferença no tuplo criado (a função \textit{nub} remove repetidos da lista) logo se houverem diferenças entre as listas deve-se a haver valores repetidos logo a função retorna False e True no caso de serem as listas iguais.
+
+\begin{code}
+isValidMagicNr = uncurry (==) . split id nub . cataBlockchain(either (singl.p1)  (cons . (p1 >< id))) 
+\end{code}
+
+
 
 
 \subsection*{Problema 2}
 
+Tal como o problema 1 definimos as funções inQTree e outQTree e os respetivos cata, ana e hylomorfismos, tal como um \textit{Functor} que aplica a função apenas às folhas da Tree, neste caso ao pixel.
 
 \begin{code}
-
-{-
-data QTree a = Cell a Int Int | Block (QTree a) (QTree a) (QTree a) (QTree a)
-inQTree :: Either (a, (Int, Int)) (QTree a, (QTree a, (QTree a, QTree a))) -> QTree a
-outQTree :: QTree a -> Either (a, (Int, Int)) (QTree a, (QTree a, (QTree a, QTree a)))
-baseQTree :: (a1 -> b) -> (a2 -> d1) -> Either (a1, d2) (a2, (a2, (a2, a2))) -> Either (b, d2) (d1, (d1, (d1, d1)))
-recQTree :: (a -> d1) -> Either (b, d2) (a, (a, (a, a))) -> Either (b, d2) (d1, (d1, (d1, d1)))
-cataQTree :: (Either (b, (Int, Int)) (d, (d, (d, d))) -> d) -> QTree b -> d
-anaQTree :: (a1 -> Either (a2, (Int, Int)) (a1, (a1, (a1, a1)))) -> a1 -> QTree a2
-hyloQTree :: (Either (b, (Int, Int)) (c, (c, (c, c))) -> c) -> (a -> Either (b, (Int, Int)) (a, (a, (a, a)))) -> a -> c
-a b c d -> c a d b
--}
-
 
 inQTree (Left (a,(b,c))) = Cell a b c
 inQTree  (Right (a,(b,(c,d)))) = Block a b c d   
@@ -1017,6 +1027,8 @@ outQTree (Cell a b c) = i1 (a,(b,c))
 outQTree (Block a b c d) = i2 (a,(b,(c,d)))  
 baseQTree g h = (g >< id) -|- (h >< (h >< (h >< h)))
 recQTree g = baseQTree id g
+
+
 cataQTree g =  g . recQTree(cataQTree g) . outQTree
 anaQTree g = inQTree . recQTree(anaQTree g) . g
 hyloQTree g h = cataQTree g . anaQTree h
@@ -1024,29 +1036,47 @@ hyloQTree g h = cataQTree g . anaQTree h
 instance Functor QTree where
     fmap g = cataQTree (inQTree . baseQTree g id)
 
+\end{code}
+\subsubsection{1 - rotateQTree}
 
+Para rodar uma QTree temos de trocar as linhas e as colunas de cada Cell, e rodar cada QTree do Block, para tal basta trocar as posições das quatro QTrees, para isso aplicamos três splits para obter as quatro QTrees efetuando as trocas ao aplicar apenas projeções nos tuplos. Aplicando um cata-morfismo do nosso \textit{inQTree} após "gene" para obter uma QTree ao aplicar o cata-morfismo. 
 
+\begin{code}
 rotateQTree = cataQTree(inQTree . (f -|-  g))
               where g = split (p1.p2.p2) (split p1 (split (p2.p2.p2) (p1.p2))) 
                     f = id >< swap
+\end{code}
 
+
+\subsubsection{2 - scaleQTree}
+Para aumentar o tamanho da QTree apenas temos de multiplicar o valor passado na função pelas linhas e colunas de cada Cell aumentando assim n vezes a QTree. Para tal utilizámos um anamorfismo que ao fazer \textit{outQTree} e aplicar o "gene" obtemos uma QTree aumentada.  
+
+\begin{code}
 scaleQTree i = anaQTree((f -|- id) . outQTree ) 
             where f = id >< ((i*) >< (i*))
+\end{code}
+  
+\subsubsection{3 - invertQTree}
 
+Para inverter as cores dẽ uma QTree, só é necessário trocar as cores dos pixeis da mesma, isto é subtrair a 255 a cada sub-cor (\textit{vermelho, green, blue}) do pixel. Definindo uma função para tal e utilizar o Functor definido para aplicar a função aos pixeis, obtemos a QTree com as cores invertidas.
+
+\begin{code}
 invertQTree = fmap f where
               f (PixelRGBA8 r g b a) = PixelRGBA8 (255-r) (255-g) (255-b) a
+\end{code}
 
---((L1,C1),((L2,C2),((L3,C3),(L4,C4))))
 
+\begin{code}
 compressQTree = undefined 
 outlineQTree = undefined
 \end{code}
+
 
 \subsection*{Problema 3}
 
 \begin{code}
 base = flatq . split f g
-     where f =  split one (succ)
+     where f = split one (succ)
            g = split one one
            flatq ((a,b),(c,d)) = (a,b,c,d)
 
@@ -1064,20 +1094,6 @@ loop =  flatq . split f g . unflatq
 \subsection*{Problema 4}
 
 \begin{code}
-{-
-data FTree a b = Unit b | Comp a (FTree a b) (FTree a b) deriving (Eq,Show)
-type PTree = FTree Square Square
-type Square = Float
-
-inFTree :: Either b (a, (FTree a b, FTree a b)) -> FTree a b
-outFTree :: FTree a1 a2 -> Either a2 (a1, (FTree a1 a2, FTree a1 a2))
-baseFTree :: (a1 -> b1) -> (a2 -> b2) -> (a3 -> d) -> Either a2 (a1, (a3, a3)) -> Either b2 (b1, (d, d))
-recFTree :: (a -> d) -> Either b1 (b2, (a, a)) -> Either b1 (b2, (d, d))
-cataFTree :: (Either b1 (b2, (d, d)) -> d) -> FTree b2 b1 -> d
-anaFTree :: (a1 -> Either b (a2, (a1, a1))) -> a1 -> FTree a2 b
-hyloFTree :: (Either b1 (b2, (c, c)) -> c) -> (a -> Either b1 (b2, (a, a))) -> a -> c
--}
-
 
 inFTree (Left b) = Unit b
 inFTree (Right (a,(e,d))) = Comp a e d
@@ -1093,7 +1109,7 @@ hyloFTree g h = cataFTree g . anaFTree h
 instance Bifunctor FTree where
     bimap g h = anaFTree (baseFTree g h id. outFTree)
 
-generatePTree =  anaFTree(g . outNat ) 
+generatePTree =  anaFTree(g . outNat) 
                 where g = const(1.0) -|- (split (((sqrt(2)/2) ^) . succ) (split id  id))
                     
 
@@ -1438,6 +1454,7 @@ isBalancedFTree = isJust . cataFTree (either (const (Just 0)) g)
     where
     g (a,(l,r)) = join (liftA2 equal l r)
     equal x y = if x == y then Just (x+1) else Nothing
+
 \end{code}
 %endif
 
