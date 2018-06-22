@@ -1058,7 +1058,7 @@ scaleQTree i = anaQTree((f -|- id) . outQTree )
   
 \subsubsection{3 - invertQTree}
 
-Para inverter as cores dẽ uma QTree, só é necessário trocar as cores dos pixeis da mesma, isto é subtrair a 255 a cada sub-cor (\textit{vermelho, green, blue}) do pixel. Definindo uma função para tal e utilizar o Functor definido para aplicar a função aos pixeis, obtemos a QTree com as cores invertidas.
+Para inverter as cores de uma QTree, só é necessário trocar as cores dos pixeis da mesma, isto é subtrair a 255 a cada sub-cor (\textit{vermelho, green, blue}) do pixel. Definindo uma função para tal e utilizar o Functor definido para aplicar a função aos pixeis, obtemos a QTree com as cores invertidas.
 
 \begin{code}
 invertQTree = fmap f where
