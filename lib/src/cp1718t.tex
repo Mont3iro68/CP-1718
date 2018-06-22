@@ -1322,7 +1322,7 @@ Neste primeiro problema, é utilizado o tipo de dados \textit{Blockchain}, o que
 \\
 \>[B]{}\Varid{anaBlockchain}\;\Varid{g}\mathrel{=}\Varid{inBlockchain}\comp \Varid{recBlockchain}\;(\Varid{anaBlockchain}\;\Varid{g})\comp \Varid{g}{}\<[E]%
 \\
-\>[B]{}\Varid{hyloBlockchain}\;\Varid{h}\;\Varid{g}\mathrel{=}\Varid{cataBlockchain}\;\Varid{h}\comp \Varid{anaBlockchain}\;\Varid{g}{}\<[E]%
+\>[B]{}\Varid{hyloBlockchain}\;\Varid{g}\;\Varid{h}\mathrel{=}\Varid{cataBlockchain}\;\Varid{g}\comp \Varid{anaBlockchain}\;\Varid{h}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1337,6 +1337,22 @@ Neste primeiro problema, é utilizado o tipo de dados \textit{Blockchain}, o que
 
 Para esta função utilizámos um cata-morfismo com um "gene" que nos permite retirar a lista de todas as transações da BlockChain, após a sua utilização. Para isso o "gene" apenas terá de ir a cada bloco, e obter a lista de transações de cada Bloco, e no caso de termos o tuplo compondo um bloco, e após aplicar o cata-morfismo já temos em vez da BlockChain, uma lista de transações, logo apenas temos de concatenar as duas listas presentes no tuplo com a função \textit{conc}.
 
+Com isto chegamos ao seguinte diagrama:
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Blockchain}}
+           \ar[d]_-{\ensuremath{\Varid{allTransactions}\;\Varid{g}}}
+           \ar[r]^-{\ensuremath{\Varid{outBlockchain}}}
+&
+    \ensuremath{\Conid{Block}\mathbin{+}(\Conid{Block}\times\Conid{Blockchain})}
+           \ar[d]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times}\cata{g}}
+\\
+     \ensuremath{\Conid{Transactions}}
+&
+     \ensuremath{\Conid{Block}\mathbin{+}(\Conid{Block}\times\Conid{Transactions})}
+           \ar[l]_-{\ensuremath{\Varid{g}}}
+}
+\end{eqnarray*}
 
 \subsubsection{2 - ledger}
 
@@ -1354,6 +1370,28 @@ Para esta função utilizámos um cata-morfismo com um "gene" que nos permite re
 A partir de uma BlockChain, é possível calcular o valor que cada entidade
 detém, tipicamente designado de ledger. Para isso primeiro aplicamos o cata-morfismo na BlockChain para obter todas as transações da mesma através da função anteriormente definida \textit{allTransactions}. Depois um cata-morfismo para obter a lista de tuplo \textit{(Entity,Value)}, ainda com Entidades repetidas e valores negativos, utilizámos a função \textit{collect} para obter uma lista de valores de cada entidade eliminando as repetidas. Tendo isto basta aplicar um $map (id * sum)$ para somar os valores de cada entidade.  
 
+Com isto, podemos desenvolver o seguinte diagrama:
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Blockchain}}
+           \ar[d]_-{\ensuremath{\Varid{allTransactions}\;\Varid{g}}}
+           \ar[r]^-{\ensuremath{\Varid{allTransactions}}}
+&
+    \ensuremath{\Conid{Transactions}}
+           \ar[r]^-{\cata{g}}
+& 
+\ensuremath{(\Conid{Entity}\times\Conid{Value})\mathbin{*}}
+\ar[d]^-{\ensuremath{\Varid{collect}}}
+\\
+     \ensuremath{\Conid{Transactions}}
+&
+&
+     \ensuremath{(\Conid{Entity}\times\Conid{Value}\mathbin{*})\mathbin{*}}
+           \ar[ll]_-{\ensuremath{\map \;(\Varid{id}\times\Varid{sum})}}
+}
+\end{eqnarray*}
+
+
 
 \subsubsection{3 - isValidMagicNr}
 Para verificar se não existem MagicNr repitidos na BlockChain, começámos por aplicar um cata-morfismo para obter a lista de MagicNr da mesma. Depois aplicamos um \textit{split id nub} e verificamos a diferença no tuplo criado (a função \textit{nub} remove repetidos da lista) logo se houverem diferenças entre as listas deve-se a haver valores repetidos logo a função retorna False e True no caso de serem as listas iguais.
@@ -1367,7 +1405,22 @@ Para verificar se não existem MagicNr repitidos na BlockChain, começámos por 
 \ColumnHook
 \end{hscode}\resethooks
 
-
+Posto isto, desenvolvemos o seguinte diagrama:
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Blockchain}}
+           \ar[d]_-{\ensuremath{\Varid{isValidMagicNr}}}
+           \ar[r]^-{\ensuremath{\Varid{cataBlockchain}\;\Varid{g}}}
+&
+    \ensuremath{\Conid{MagicNr}\mathbin{*}}
+           \ar[d]^-{\ensuremath{\conj{\Varid{id}}{\Varid{nub}}}}
+\\
+     \ensuremath{\Conid{Bool}}
+&
+     \ensuremath{\Conid{MagicNr}\mathbin{*}\times\Conid{MagicNr}\mathbin{*}}
+           \ar[l]_-{\ensuremath{\uncurry{(\equiv )}}}
+}
+\end{eqnarray*}
 
 
 \subsection*{Problema 2}
@@ -1377,13 +1430,9 @@ Tal como o problema 1 definimos as funções inQTree e outQTree e os respetivos 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{16}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{inQTree}\;(i_1\;(\Varid{a},(\Varid{b},\Varid{c})))\mathrel{=}\Conid{Cell}\;\Varid{a}\;\Varid{b}\;\Varid{c}{}\<[E]%
-\\
-\>[B]{}\Varid{inQTree}\;{}\<[10]%
-\>[10]{}(i_2\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d}))))\mathrel{=}\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}{}\<[E]%
+\>[B]{}\Varid{inQTree}\mathrel{=}\alt{\uncurry{\uncurry{\Conid{Cell}}}\comp \Varid{assocl}}{\uncurry{\uncurry{\uncurry{\Conid{Block}}}}\comp \Varid{assocl}\comp \Varid{assocl}}{}\<[E]%
 \\
 \>[B]{}\Varid{outQTree}\;(\Conid{Cell}\;\Varid{a}\;\Varid{b}\;\Varid{c})\mathrel{=}i_1\;(\Varid{a},(\Varid{b},\Varid{c})){}\<[E]%
 \\
@@ -1427,6 +1476,23 @@ Para rodar uma QTree temos de trocar as linhas e as colunas de cada Cell, e roda
 \ColumnHook
 \end{hscode}\resethooks
 
+Posto isto, podemos desenvolver o seguinte diagrama:
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}}
+           \ar[d]_-{\ensuremath{\Varid{rotateQTree}}}
+           \ar[r]^-{\ensuremath{\Varid{outQTree}}}
+&
+    \ensuremath{\mathit B\mathbin{+}}{QTree^4}
+           \ar[d]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{cataQTree}\;\Varid{g}}}
+\\
+     \ensuremath{\Conid{QTree}}
+&
+	 \ensuremath{\mathit B\mathbin{+}\Conid{QTree}}
+	 		\ar[l]^-{g=\ensuremath{\Varid{inQTree}\comp (\Varid{f}\mathbin{+}\Varid{g})}}
+}
+\end{eqnarray*}
+
 
 \subsubsection{2 - scaleQTree}
 Para aumentar o tamanho da QTree apenas temos de multiplicar o valor passado na função pelas linhas e colunas de cada Cell aumentando assim n vezes a QTree. Para tal utilizámos um anamorfismo que ao fazer \textit{outQTree} e aplicar o "gene" obtemos uma QTree aumentada.  
@@ -1441,6 +1507,23 @@ Para aumentar o tamanho da QTree apenas temos de multiplicar o valor passado na 
 \>[13]{}\mathbf{where}\;\Varid{f}\mathrel{=}\Varid{id}\times((\Varid{i}\mathbin{*})\times(\Varid{i}\mathbin{*})){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+
+Posto isto, chegamos ao seguinte diagrama:
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}}
+&
+    \ensuremath{\mathit B\mathbin{+}}{QTree^4}
+           \ar[l]^-{\ensuremath{\Varid{inQTree}}}
+\\
+     \ensuremath{\Conid{QTree}}
+           \ar[u]^-{\ensuremath{\Varid{scaleQTree}\;\Varid{i}}}
+	 		     \ar[r]_-{h=\ensuremath{(\Varid{f}\mathbin{+}\Varid{id})\comp \Varid{outQTree}}}
+&
+   \ensuremath{\mathit B\mathbin{+}\Conid{QTree}}
+      \ar[u]_-{\ensuremath{\Varid{id}\mathbin{+}}\ana{h}}
+}
+\end{eqnarray*}
   
 \subsubsection{3 - invertQTree}
 
@@ -1457,6 +1540,16 @@ Para inverter as cores de uma QTree, só é necessário trocar as cores dos pixe
 \ColumnHook
 \end{hscode}\resethooks
 
+Posto isto, desenvolvemos o seguinte diagrama:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}}
+      \ar[r]^-{Functor (f)} &
+      \ensuremath{\Conid{F}\;\Conid{QTree}}
+}
+\end{eqnarray*}
+
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1470,16 +1563,17 @@ Para inverter as cores de uma QTree, só é necessário trocar as cores dos pixe
 
 \subsection*{Problema 3}
 
+Para este problema percebemos que as quatro funções auxiliares definidas no problema seriam o nosso ponto de partida para resolver o mesmo. Então para isso começamos a definir as funções  
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{6}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{12}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{base}\mathrel{=}\Varid{flatq}\comp \conj{\Varid{f}}{\Varid{g}}{}\<[E]%
 \\
 \>[B]{}\hsindent{6}{}\<[6]%
-\>[6]{}\mathbf{where}\;\Varid{f}\mathrel{=}\conj{\Varid{one}}{\succ }{}\<[E]%
+\>[6]{}\mathbf{where}\;\Varid{f}\mathrel{=}\conj{\Varid{one}}{\mathbin{+}\mathrm{1}}{}\<[E]%
 \\
 \>[6]{}\hsindent{6}{}\<[12]%
 \>[12]{}\Varid{g}\mathrel{=}\conj{\Varid{one}}{\Varid{one}}{}\<[E]%
@@ -1487,8 +1581,7 @@ Para inverter as cores de uma QTree, só é necessário trocar as cores dos pixe
 \>[6]{}\hsindent{6}{}\<[12]%
 \>[12]{}\Varid{flatq}\;((\Varid{a},\Varid{b}),(\Varid{c},\Varid{d}))\mathrel{=}(\Varid{a},\Varid{b},\Varid{c},\Varid{d}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{loop}\mathrel{=}{}\<[9]%
-\>[9]{}\Varid{flatq}\comp \conj{\Varid{f}}{\Varid{g}}\comp \Varid{unflatq}{}\<[E]%
+\>[B]{}\Varid{loop}\mathrel{=}\Varid{flatq}\comp \conj{\Varid{f}}{\Varid{g}}\comp \Varid{unflatq}{}\<[E]%
 \\
 \>[B]{}\hsindent{6}{}\<[6]%
 \>[6]{}\mathbf{where}\;\Varid{f}\mathrel{=}\conj{\Varid{mul}\comp \p1}{\succ \comp \p2\comp \p1}{}\<[E]%
@@ -1505,18 +1598,15 @@ Para inverter as cores de uma QTree, só é necessário trocar as cores dos pixe
 \end{hscode}\resethooks
 
 \subsection*{Problema 4}
+Tal como nos problemas 1 e 2 definimos agora para a estrutura FTree, o isomorfismo \textit {in/outFTree} e o cata, ana e hylomorfismos da mesma e ainda um bifuntor que aplica duas funções, uma para as folhas da árvore e outra para o elemento nos nodos.
+
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{16}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{18}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{85}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{inFTree}\;(i_1\;\Varid{b})\mathrel{=}\Conid{Unit}\;\Varid{b}{}\<[E]%
-\\
-\>[B]{}\Varid{inFTree}\;(i_2\;(\Varid{a},(\Varid{e},\Varid{d})))\mathrel{=}\Conid{Comp}\;\Varid{a}\;\Varid{e}\;\Varid{d}{}\<[E]%
+\>[B]{}\Varid{inFTree}\mathrel{=}\alt{\Conid{Unit}}{\uncurry{\uncurry{\Conid{Comp}}}\comp \Varid{assocl}}{}\<[E]%
 \\
 \>[B]{}\Varid{outFTree}\;(\Conid{Unit}\;\Varid{b})\mathrel{=}i_1\;\Varid{b}{}\<[E]%
 \\
@@ -1537,14 +1627,53 @@ Para inverter as cores de uma QTree, só é necessário trocar as cores dos pixe
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\Varid{bimap}\;\Varid{g}\;\Varid{h}\mathrel{=}\Varid{anaFTree}\;(\Varid{baseFTree}\;\Varid{g}\;\Varid{h}\;\Varid{id}\comp \Varid{outFTree}){}\<[E]%
-\\[\blanklineskip]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\subsubsection{1 - generatePTree}
+
+Para gerar uma PTree através de um inteiro temos de aplicar um anamorfismo ao inteiro passado como argumento pela função. Aplicando o nosso "gene" após aplicar o \textit {outNat} ao inteiro obtemos as unidades básicas da nossa árvore e o anamorfismo trata de criar o resto dos nodos da árvore. O último quadrado terá como tamanho de lado 1, os restantes seguem o cálculo $(\sqrt{2} /2) ^ n$.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{18}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{85}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{generatePTree}\mathrel{=}{}\<[18]%
 \>[18]{}\Varid{anaFTree}\;(\Varid{g}\comp \Varid{outNat}){}\<[E]%
 \\
 \>[B]{}\hsindent{17}{}\<[17]%
 \>[17]{}\mathbf{where}\;\Varid{g}\mathrel{=}\underline{(\mathrm{1.0})}+\conj{((\Varid{sqrt}\;(\mathrm{2})\mathbin{/}\mathrm{2})\mathbin{\uparrow})\comp \succ }{\conj{\Varid{id}}{{}\<[85]%
 \>[85]{}\Varid{id}}}{}\<[E]%
-\\[\blanklineskip]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Posto isto, desenvolvemos o seguinte diagrama:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{PTree}}
+&
+    \ensuremath{\Conid{U}\mathbin{+}\mathit C\times(\Conid{FTree}\times\Conid{FTree})}
+           \ar[l]^-{\ensuremath{\Varid{inFTree}}}
+\\
+     \ensuremath{\Conid{Int}}
+           \ar[u]^-{\ensuremath{\Varid{generatePTree}\;\Varid{i}}}
+           \ar[r]_-{h=\ensuremath{\Varid{g}\comp \Varid{outNat}}}
+&
+   \ensuremath{\Conid{U}\mathbin{+}\mathit C\times(\Conid{Int}\times\Conid{Int})}
+      \ar[u]_-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times}(\ana{h}\ensuremath{\times}\ana{h})  }
+}
+\end{eqnarray*}
+
+
+            
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{drawPTree}\mathrel{=}\bot {}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks

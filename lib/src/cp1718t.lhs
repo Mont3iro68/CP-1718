@@ -982,7 +982,7 @@ outBlockchain (Bcs (b,bc)) = Right (b,bc)
 recBlockchain f = id -|- (id >< f)  
 cataBlockchain g = g . recBlockchain (cataBlockchain g) . outBlockchain
 anaBlockchain g = inBlockchain . recBlockchain (anaBlockchain g) . g
-hyloBlockchain h g = cataBlockchain h . anaBlockchain g
+hyloBlockchain g h = cataBlockchain g . anaBlockchain h
 \end{code}
 
 \subsubsection{1 - allTransactions}
@@ -993,6 +993,22 @@ allTransactions = cataBlockchain ( either (p2.p2) (conc . ((p2.p2) >< id)))
 
 Para esta função utilizámos um cata-morfismo com um "gene" que nos permite retirar a lista de todas as transações da BlockChain, após a sua utilização. Para isso o "gene" apenas terá de ir a cada bloco, e obter a lista de transações de cada Bloco, e no caso de termos o tuplo compondo um bloco, e após aplicar o cata-morfismo já temos em vez da BlockChain, uma lista de transações, logo apenas temos de concatenar as duas listas presentes no tuplo com a função \textit{conc}.
 
+Com isto chegamos ao seguinte diagrama:
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Blockchain|
+           \ar[d]_-{|allTransactions g|}
+           \ar[r]^-{|outBlockchain|}
+&
+    |Block + (Block >< Blockchain)|
+           \ar[d]^-{|id+id><|\cata{g}}
+\\
+     |Transactions|
+&
+     |Block + (Block >< Transactions)|
+           \ar[l]_-{|g|}
+}
+\end{eqnarray*}
 
 \subsubsection{2 - ledger}
 
@@ -1004,6 +1020,28 @@ ledger = map (id >< sum) . col . cataList(either nil (f)) . allTransactions
 A partir de uma BlockChain, é possível calcular o valor que cada entidade
 detém, tipicamente designado de ledger. Para isso primeiro aplicamos o cata-morfismo na BlockChain para obter todas as transações da mesma através da função anteriormente definida \textit{allTransactions}. Depois um cata-morfismo para obter a lista de tuplo \textit{(Entity,Value)}, ainda com Entidades repetidas e valores negativos, utilizámos a função \textit{collect} para obter uma lista de valores de cada entidade eliminando as repetidas. Tendo isto basta aplicar um $map (id * sum)$ para somar os valores de cada entidade.  
 
+Com isto, podemos desenvolver o seguinte diagrama:
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Blockchain|
+           \ar[d]_-{|allTransactions g|}
+           \ar[r]^-{|allTransactions |}
+&
+    |Transactions|
+           \ar[r]^-{\cata{g}}
+& 
+|(Entity >< Value)*|
+\ar[d]^-{|collect|}
+\\
+     |Transactions|
+&
+&
+     |(Entity >< Value*)*|
+           \ar[ll]_-{|map(id><sum)|}
+}
+\end{eqnarray*}
+
+
 
 \subsubsection{3 - isValidMagicNr}
 Para verificar se não existem MagicNr repitidos na BlockChain, começámos por aplicar um cata-morfismo para obter a lista de MagicNr da mesma. Depois aplicamos um \textit{split id nub} e verificamos a diferença no tuplo criado (a função \textit{nub} remove repetidos da lista) logo se houverem diferenças entre as listas deve-se a haver valores repetidos logo a função retorna False e True no caso de serem as listas iguais.
@@ -1012,7 +1050,22 @@ Para verificar se não existem MagicNr repitidos na BlockChain, começámos por 
 isValidMagicNr = uncurry (==) . split id nub . cataBlockchain(either (singl.p1)  (cons . (p1 >< id))) 
 \end{code}
 
-
+Posto isto, desenvolvemos o seguinte diagrama:
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Blockchain|
+           \ar[d]_-{|isValidMagicNr|}
+           \ar[r]^-{|cataBlockchain g|}
+&
+    |MagicNr*|
+           \ar[d]^-{|split(id) (nub)|}
+\\
+     |Bool|
+&
+     |MagicNr* >< MagicNr*|
+           \ar[l]_-{|uncurry(==)|}
+}
+\end{eqnarray*}
 
 
 \subsection*{Problema 2}
@@ -1046,6 +1099,23 @@ rotateQTree = cataQTree(inQTree . (f -|-  g))
                     f = id >< swap
 \end{code}
 
+Posto isto, podemos desenvolver o seguinte diagrama:
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree|
+           \ar[d]_-{|rotateQTree|}
+           \ar[r]^-{|outQTree|}
+&
+    |B +|{QTree^4}
+           \ar[d]^-{|id + cataQTree g|}
+\\
+     |QTree|
+&
+	 |B + QTree|
+	 		\ar[l]^-{g=|inQTree . (f +  g)|}
+}
+\end{eqnarray*}
+
 
 \subsubsection{2 - scaleQTree}
 Para aumentar o tamanho da QTree apenas temos de multiplicar o valor passado na função pelas linhas e colunas de cada Cell aumentando assim n vezes a QTree. Para tal utilizámos um anamorfismo que ao fazer \textit{outQTree} e aplicar o "gene" obtemos uma QTree aumentada.  
@@ -1054,6 +1124,23 @@ Para aumentar o tamanho da QTree apenas temos de multiplicar o valor passado na 
 scaleQTree i = anaQTree((f -|- id) . outQTree ) 
             where f = id >< ((i*) >< (i*))
 \end{code}
+
+Posto isto, chegamos ao seguinte diagrama:
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree|
+&
+    |B +|{QTree^4}
+           \ar[l]^-{|inQTree|}
+\\
+     |QTree|
+           \ar[u]^-{|scaleQTree i|}
+	 		     \ar[r]_-{h=|(f +  id) . outQTree|}
+&
+   |B + QTree|
+      \ar[u]_-{|id+|\ana{h}}
+}
+\end{eqnarray*}
   
 \subsubsection{3 - invertQTree}
 
@@ -1063,6 +1150,16 @@ Para inverter as cores de uma QTree, só é necessário trocar as cores dos pixe
 invertQTree = fmap f where
               f (PixelRGBA8 r g b a) = PixelRGBA8 (255-r) (255-g) (255-b) a
 \end{code}
+
+Posto isto, desenvolvemos o seguinte diagrama:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree|
+      \ar[r]^-{Functor (f)} &
+      |F QTree|
+}
+\end{eqnarray*}
 
 
 \begin{code}
@@ -1121,7 +1218,28 @@ Para gerar uma PTree através de um inteiro temos de aplicar um anamorfismo ao i
 \begin{code}
 generatePTree =  anaFTree(g . outNat) 
                 where g = const(1.0) -|- (split (((sqrt(2)/2) ^) . succ) (split id  id))
-\end{code}                    
+\end{code}   
+
+Posto isto, desenvolvemos o seguinte diagrama:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |PTree|
+&
+    |U + C >< (FTree >< FTree)|
+           \ar[l]^-{|inFTree|}
+\\
+     |Int|
+           \ar[u]^-{|generatePTree i|}
+           \ar[r]_-{h=|g . outNat|}
+&
+   |U + C >< (Int >< Int)|
+      \ar[u]_-{|id+ id ><|(\ana{h}|><|\ana{h})  }
+}
+\end{eqnarray*}
+
+
+            
 
 \begin{code}
 drawPTree = undefined 
