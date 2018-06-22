@@ -1170,7 +1170,109 @@ outlineQTree = undefined
 
 \subsection*{Problema 3}
 
-Para este problema percebemos que as quatro funções auxiliares definidas no problema seriam o nosso ponto de partida para resolver o mesmo. Então para isso começamos a definir as funções  
+Para este problema percebemos que as quatro funções auxiliares definidas no problema seriam o nosso ponto de partida para resolver o mesmo. Então para isso começamos a definir as funções: 
+
+
+\begin{eqnarray*}
+\start
+  |f k 0 = one|
+  \more
+  |f k (+1) = mul . split lk fk|
+  \more
+  |l k 0 = (+1)|
+  \more
+  |l k (+1) = (+1)|
+%
+\just\equiv{Igualdade extensional |><| 2, Def-Comp, Eq-+}
+%
+  |either (fk.zero) (fk.(+1)) = either (one) (mul.split (lk) (fk))|
+  \more
+  |either (lk.zero) (lk.(+1)) = either (+1) ((+1).lk)|
+%
+\just\equiv{ Fusão-+, Absorção-+ }
+%
+  |fk.either (zero) (+1) = either (one) (mul).(id + split (lk) (fk))|
+  \more
+  |lk.either (zero) (+1) = either (+1) (+1).(id + lk)|
+%
+\just\equiv{ Fokkinga }
+%
+  |split (fk) (lk) =|\cata{|split (either (one) (mul)) (either (+1) (+1))|}
+\qed
+\end{eqnarray*}
+
+Após obtermos o split de fk e lk, passamos à demonstração do segundo split g e s:
+
+\begin{eqnarray*}
+\start
+  |g zero = one|
+  \more
+  |g (+1) = mul.split s g|
+  \more
+  |s zero = one|
+  \more
+  |s (+1) = (+1).s|
+%
+\just\equiv{Igualdade extensional |><| 2, Def-Comp, Eq-+}
+%
+  |either (g.zero) (g.(+1)) = either (one) (mul.split (s) (g))|
+  \more
+  |either (s.zero) (s.(+1)) = either (+1) ((+1).s)|
+%
+\just\equiv{ Fusão-+, Absorção-+ }
+%
+  |g.either (zero) (+1) = either (one) (mul).(id + split (s) (g))|
+  \more
+  |s.either (zero) (+1) = either (+1) (+1).(id + s)|
+%
+\just\equiv{ Fokkinga }
+%
+  |split (g) (s) =|\cata{|split (either (one) (mul)) (either (one) (+1))|}
+\qed
+\end{eqnarray*}
+
+Finalmente, ao termos o resultado das duas demonstrações, combinamos os resultados com a lei de banana-split para derivar o loop e a base:
+
+\begin{eqnarray*}
+\start
+  |split (cataNat(split (either (one) (mul)) (either (+1) (+1)))) 
+         (cataNat(split (either (one) (mul)) (either (one) (+1))))|
+%
+\just\equiv{ Banana-split }
+%
+  |cataNat (split (either (one) (mul)) (either (+1) (+1))><split (either (one) (mul)) (either (one) (+1)).
+  split (F p1) (F p2) )|
+%
+\just\equiv{ Absorção-x, Fusão-x }
+%
+  |cataNat (split (split (either (one) (mul).F p1) (either (+1) (+1).F p1)) 
+  (split (either (one) (mul).F p2) (either (one) (+1).F p2)))|
+%
+\just\equiv{ Def |Ff = id + f| }
+%
+  |cataNat (split (split (either (one) (mul).id + p1) (either (+1) (+1).id + p1)) 
+  (split (either (one) (mul).id + p2) (either (one) (+1).id + p2)))|
+%
+\just\equiv{ Absorção-+, Nat-id }
+%
+  |cataNat (split (split (either (one) (mul.p1)) (either (+1) (+1.p1))) 
+  (split (either (one) (mul.p2)) (either (one) (+1.p2))))|
+%
+\just\equiv{ Lei da Troca |><| 2 }
+%
+  |cataNat (either (split (split (one) (+1)) (split (one) (one))) 
+  (split (split (mul.p1) (+1.p1)) (split (mul.p2) (+1.p2))))|
+%
+\just\equiv{ |for loop base = cataNat(either base loop)|, Universal-+ }
+%
+        |lcbr(
+    base = split (split (one) (+1)) (split (one) (one))
+  )(
+    loop = split (split (mul.p1) (+1.p1)) (split (mul.p2) (+1.p2))
+  )| 
+\qed
+\end{eqnarray*}
+
 
 \begin{code}
 

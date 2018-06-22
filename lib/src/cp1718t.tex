@@ -1563,7 +1563,99 @@ Posto isto, desenvolvemos o seguinte diagrama:
 
 \subsection*{Problema 3}
 
-Para este problema percebemos que as quatro funções auxiliares definidas no problema seriam o nosso ponto de partida para resolver o mesmo. Então para isso começamos a definir as funções  
+Para este problema percebemos que as quatro funções auxiliares definidas no problema seriam o nosso ponto de partida para resolver o mesmo. Então para isso começamos a definir as funções: 
+
+
+\begin{eqnarray*}
+\start
+  \ensuremath{\Varid{f}\;\Varid{k}\;\mathrm{0}\mathrel{=}\Varid{one}}
+  \more
+  \ensuremath{\Varid{f}\;\Varid{k}\;(\mathbin{+}\mathrm{1})\mathrel{=}\Varid{mul}\comp \conj{\Varid{lk}}{\Varid{fk}}}
+  \more
+  \ensuremath{\Varid{l}\;\Varid{k}\;\mathrm{0}\mathrel{=}(\mathbin{+}\mathrm{1})}
+  \more
+  \ensuremath{\Varid{l}\;\Varid{k}\;(\mathbin{+}\mathrm{1})\mathrel{=}(\mathbin{+}\mathrm{1})}
+%
+\just\equiv{Igualdade extensional \ensuremath{\times} 2, Def-Comp, Eq-+}
+%
+  \ensuremath{\alt{\Varid{fk}\comp \Varid{zero}}{\Varid{fk}\comp (\mathbin{+}\mathrm{1})}\mathrel{=}\alt{\Varid{one}}{\Varid{mul}\comp \conj{\Varid{lk}}{\Varid{fk}}}}
+  \more
+  \ensuremath{\alt{\Varid{lk}\comp \Varid{zero}}{\Varid{lk}\comp (\mathbin{+}\mathrm{1})}\mathrel{=}\alt{\mathbin{+}\mathrm{1}}{(\mathbin{+}\mathrm{1})\comp \Varid{lk}}}
+%
+\just\equiv{ Fusão-+, Absorção-+ }
+%
+  \ensuremath{\Varid{fk}\comp \alt{\Varid{zero}}{\mathbin{+}\mathrm{1}}\mathrel{=}\alt{\Varid{one}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\conj{\Varid{lk}}{\Varid{fk}})}
+  \more
+  \ensuremath{\Varid{lk}\comp \alt{\Varid{zero}}{\mathbin{+}\mathrm{1}}\mathrel{=}\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}\comp (\Varid{id}\mathbin{+}\Varid{lk})}
+%
+\just\equiv{ Fokkinga }
+%
+  \ensuremath{\conj{\Varid{fk}}{\Varid{lk}}\mathrel{=}}\cata{\ensuremath{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}}}}
+\qed
+\end{eqnarray*}
+
+Após obtermos o split de fk e lk, passamos à demonstração do segundo split g e s:
+
+\begin{eqnarray*}
+\start
+  \ensuremath{\Varid{g}\;\Varid{zero}\mathrel{=}\Varid{one}}
+  \more
+  \ensuremath{\Varid{g}\;(\mathbin{+}\mathrm{1})\mathrel{=}\Varid{mul}\comp \conj{\Varid{s}}{\Varid{g}}}
+  \more
+  \ensuremath{\Varid{s}\;\Varid{zero}\mathrel{=}\Varid{one}}
+  \more
+  \ensuremath{\Varid{s}\;(\mathbin{+}\mathrm{1})\mathrel{=}(\mathbin{+}\mathrm{1})\comp \Varid{s}}
+%
+\just\equiv{Igualdade extensional \ensuremath{\times} 2, Def-Comp, Eq-+}
+%
+  \ensuremath{\alt{\Varid{g}\comp \Varid{zero}}{\Varid{g}\comp (\mathbin{+}\mathrm{1})}\mathrel{=}\alt{\Varid{one}}{\Varid{mul}\comp \conj{\Varid{s}}{\Varid{g}}}}
+  \more
+  \ensuremath{\alt{\Varid{s}\comp \Varid{zero}}{\Varid{s}\comp (\mathbin{+}\mathrm{1})}\mathrel{=}\alt{\mathbin{+}\mathrm{1}}{(\mathbin{+}\mathrm{1})\comp \Varid{s}}}
+%
+\just\equiv{ Fusão-+, Absorção-+ }
+%
+  \ensuremath{\Varid{g}\comp \alt{\Varid{zero}}{\mathbin{+}\mathrm{1}}\mathrel{=}\alt{\Varid{one}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\conj{\Varid{s}}{\Varid{g}})}
+  \more
+  \ensuremath{\Varid{s}\comp \alt{\Varid{zero}}{\mathbin{+}\mathrm{1}}\mathrel{=}\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}\comp (\Varid{id}\mathbin{+}\Varid{s})}
+%
+\just\equiv{ Fokkinga }
+%
+  \ensuremath{\conj{\Varid{g}}{\Varid{s}}\mathrel{=}}\cata{\ensuremath{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}}}}}
+\qed
+\end{eqnarray*}
+
+Finalmente, ao termos o resultado das duas demonstrações, combinamos os resultados com a lei de banana-split para derivar o loop e a base:
+
+\begin{eqnarray*}
+\start
+  \ensuremath{\conj{\cata{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}}}}{\cata{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}}}}}}
+%
+\just\equiv{ Banana-split }
+%
+  \ensuremath{\cata{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}}\times\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}}}\comp \conj{\Conid{F}\;\p1}{\Conid{F}\;\p2}}}
+%
+\just\equiv{ Absorção-x, Fusão-x }
+%
+  \ensuremath{\cata{\conj{\conj{\alt{\Varid{one}}{\Varid{mul}}\comp \Conid{F}\;\p1}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}\comp \Conid{F}\;\p1}}{\conj{\alt{\Varid{one}}{\Varid{mul}}\comp \Conid{F}\;\p2}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}}\comp \Conid{F}\;\p2}}}}
+%
+\just\equiv{ Def \ensuremath{\Conid{Ff}\mathrel{=}\Varid{id}\mathbin{+}\Varid{f}} }
+%
+  \ensuremath{\cata{\conj{\conj{\alt{\Varid{one}}{\Varid{mul}}\comp \Varid{id}\mathbin{+}\p1}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}\comp \Varid{id}\mathbin{+}\p1}}{\conj{\alt{\Varid{one}}{\Varid{mul}}\comp \Varid{id}\mathbin{+}\p2}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}}\comp \Varid{id}\mathbin{+}\p2}}}}
+%
+\just\equiv{ Absorção-+, Nat-id }
+%
+  \ensuremath{\cata{\conj{\conj{\alt{\Varid{one}}{\Varid{mul}\comp \p1}}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}\comp \p1}}}{\conj{\alt{\Varid{one}}{\Varid{mul}\comp \p2}}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}\comp \p2}}}}}
+%
+\just\equiv{ Lei da Troca \ensuremath{\times} 2 }
+%
+  \ensuremath{\cata{\alt{\conj{\conj{\Varid{one}}{\mathbin{+}\mathrm{1}}}{\conj{\Varid{one}}{\Varid{one}}}}{\conj{\conj{\Varid{mul}\comp \p1}{\mathbin{+}\mathrm{1}\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\mathbin{+}\mathrm{1}\comp \p2}}}}}
+%
+\just\equiv{ \ensuremath{\mathsf{for}\ \Varid{loop}\ \Varid{base}\mathrel{=}\cata{\alt{\Varid{base}}{\Varid{loop}}}}, Universal-+ }
+%
+        \ensuremath{\begin{lcbr}\Varid{base}\mathrel{=}\conj{\conj{\Varid{one}}{\mathbin{+}\mathrm{1}}}{\conj{\Varid{one}}{\Varid{one}}}\\\Varid{loop}\mathrel{=}\conj{\conj{\Varid{mul}\comp \p1}{\mathbin{+}\mathrm{1}\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\mathbin{+}\mathrm{1}\comp \p2}}\end{lcbr}} 
+\qed
+\end{eqnarray*}
+
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
