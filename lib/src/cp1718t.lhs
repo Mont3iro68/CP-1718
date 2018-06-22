@@ -1073,6 +1073,8 @@ outlineQTree = undefined
 
 \subsection*{Problema 3}
 
+Para este problema percebemos que as quatro funções auxiliares definidas no problema seriam o nosso ponto de partida para resolver o mesmo. Então para isso começamos a definir as funções  
+
 \begin{code}
 
 base = flatq . split f g
