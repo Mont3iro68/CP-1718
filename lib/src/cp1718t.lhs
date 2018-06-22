@@ -1075,15 +1075,16 @@ outlineQTree = undefined
 \subsection*{Problema 3}
 
 \begin{code}
+
 base = flatq . split f g
-     where f = split one (succ)
-           g = split one one
+     where g = split one one
+           f = split (one) (+1)
+           
            flatq ((a,b),(c,d)) = (a,b,c,d)
 
 
-loop =  flatq . split f g . unflatq
-     where f = split (mul.p1) (succ.p2.p1)
-           g = split (mul.p2) (succ.p2.p2)
+     where f = split (mul . p1) (succ . p2 . p1)
+           g = split (mul . p2) (succ . p2 . p2)
            flatq ((a,b),(c,d)) = (a,b,c,d)
            unflatq (a,b,c,d) = ((a,b),(c,d))
 
