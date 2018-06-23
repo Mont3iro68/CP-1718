@@ -1181,7 +1181,7 @@ Para este problema percebemos que as quatro funções auxiliares definidas no pr
   \more
   |l k 0 = (+1)|
   \more
-  |l k (+1) = (+1)|
+  |l k (+1) = (+1).lk|
 %
 \just\equiv{Igualdade extensional |><| 2, Def-Comp, Eq-+}
 %
@@ -1189,15 +1189,15 @@ Para este problema percebemos que as quatro funções auxiliares definidas no pr
   \more
   |either (lk.zero) (lk.(+1)) = either (+1) ((+1).lk)|
 %
-\just\equiv{ Fusão-+, Absorção-+ }
+\just\equiv{ Fusão-+, Absorção-+, Cancelamento-x }
 %
   |fk.either (zero) (+1) = either (one) (mul).(id + split (lk) (fk))|
   \more
-  |lk.either (zero) (+1) = either (+1) (+1).(id + lk)|
+  |lk.either (zero) (+1) = either (+1) (+1.p2).(id + split(fk) (lk)|
 %
 \just\equiv{ Fokkinga }
 %
-  |split (fk) (lk) =|\cata{|split (either (one) (mul)) (either (+1) (+1))|}
+  |split (fk) (lk) =|\cata{|split (either (one) (mul)) (either (+1) (+1.p2))|}
 \qed
 \end{eqnarray*}
 
@@ -1215,15 +1215,15 @@ Após obtermos o split de fk e lk, passamos à demonstração do segundo split g
 %
 \just\equiv{Igualdade extensional |><| 2, Def-Comp, Eq-+}
 %
-  |either (g.zero) (g.(+1)) = either (one) (mul.split (s) (g))|
+  |either (g.zero) (g.(+1)) = either (one) (mul.split s g)|
   \more
-  |either (s.zero) (s.(+1)) = either (+1) ((+1).s)|
+  |either (s.zero) (s.(+1)) = either one (succ . p2 . split g s)|
 %
-\just\equiv{ Fusão-+, Absorção-+ }
+\just\equiv{ Fusão-+, Absorção-+, Cancelamento-x }
 %
   |g.either (zero) (+1) = either (one) (mul).(id + split (s) (g))|
   \more
-  |s.either (zero) (+1) = either (+1) (+1).(id + s)|
+  |s.either (zero) (+1) = either one (+1.p2).(id + split g s)|
 %
 \just\equiv{ Fokkinga }
 %
@@ -1235,44 +1235,45 @@ Finalmente, ao termos o resultado das duas demonstrações, combinamos os result
 
 \begin{eqnarray*}
 \start
-  |split (cataNat(split (either (one) (mul)) (either (+1) (+1)))) 
-         (cataNat(split (either (one) (mul)) (either (one) (+1))))|
+  |split (cataNat(split (either (one) (mul)) (either (+1) (+1.p2)))) 
+         (cataNat(split (either (one) (mul)) (either (one) (+1.p2))))|
 %
 \just\equiv{ Banana-split }
 %
-  |cataNat (split (either (one) (mul)) (either (+1) (+1))><split (either (one) (mul)) (either (one) (+1)).
+  |cataNat (split (either (one) (mul)) (either (+1) (+1.p2))><split (either (one) (mul)) (either (one) (+1.p2)).
   split (F p1) (F p2) )|
 %
 \just\equiv{ Absorção-x, Fusão-x }
 %
-  |cataNat (split (split (either (one) (mul).F p1) (either (+1) (+1).F p1)) 
-  (split (either (one) (mul).F p2) (either (one) (+1).F p2)))|
+  |cataNat (split (split (either (one) (mul).F p1) (either (+1) (+1.p2).F p1)) 
+  (split (either (one) (mul).F p2) (either (one) (+1.p2).F p2)))|
 %
 \just\equiv{ Def |Ff = id + f| }
 %
-  |cataNat (split (split (either (one) (mul).id + p1) (either (+1) (+1).id + p1)) 
-  (split (either (one) (mul).id + p2) (either (one) (+1).id + p2)))|
+  |cataNat (split (split (either (one) (mul).id + p1) (either (+1) (+1.p2).id + p1)) 
+  (split (either (one) (mul).id + p2) (either (one) (+1.p2).id + p2)))|
 %
 \just\equiv{ Absorção-+, Nat-id }
 %
-  |cataNat (split (split (either (one) (mul.p1)) (either (+1) (+1.p1))) 
-  (split (either (one) (mul.p2)) (either (one) (+1.p2))))|
+  |cataNat (split (split (either (one) (mul.p1)) (either (+1) (+1.p2.p1))) 
+  (split (either (one) (mul.p2)) (either (one) (+1.p2.p2))))|
 %
 \just\equiv{ Lei da Troca |><| 2 }
 %
   |cataNat (either (split (split (one) (+1)) (split (one) (one))) 
-  (split (split (mul.p1) (+1.p1)) (split (mul.p2) (+1.p2))))|
+  (split (split (mul.p1) (+1.p2.p1)) (split (mul.p2) (+1.p2.p2))))|
 %
 \just\equiv{ |for loop base = cataNat(either base loop)|, Universal-+ }
 %
         |lcbr(
     base = split (split (one) (+1)) (split (one) (one))
   )(
-    loop = split (split (mul.p1) (+1.p1)) (split (mul.p2) (+1.p2))
+    loop = split (split (mul.p1) (+1.p2.p1)) (split (mul.p2) (+1.p2.p2))
   )| 
 \qed
 \end{eqnarray*}
 
+Para podermos aplicar a nossa base e o nosso loop, temos de ter um par de tuplos, como a função recebe 4 inteiros sem serem tuplos, temos de utilizar uma funçao auxiliar flatq ou unflaq de maneira a retornar os tipos corretos, após aplicar a função demonstrada acima.
 
 \begin{code}
 

@@ -1574,7 +1574,7 @@ Para este problema percebemos que as quatro funções auxiliares definidas no pr
   \more
   \ensuremath{\Varid{l}\;\Varid{k}\;\mathrm{0}\mathrel{=}(\mathbin{+}\mathrm{1})}
   \more
-  \ensuremath{\Varid{l}\;\Varid{k}\;(\mathbin{+}\mathrm{1})\mathrel{=}(\mathbin{+}\mathrm{1})}
+  \ensuremath{\Varid{l}\;\Varid{k}\;(\mathbin{+}\mathrm{1})\mathrel{=}(\mathbin{+}\mathrm{1})\comp \Varid{lk}}
 %
 \just\equiv{Igualdade extensional \ensuremath{\times} 2, Def-Comp, Eq-+}
 %
@@ -1582,15 +1582,15 @@ Para este problema percebemos que as quatro funções auxiliares definidas no pr
   \more
   \ensuremath{\alt{\Varid{lk}\comp \Varid{zero}}{\Varid{lk}\comp (\mathbin{+}\mathrm{1})}\mathrel{=}\alt{\mathbin{+}\mathrm{1}}{(\mathbin{+}\mathrm{1})\comp \Varid{lk}}}
 %
-\just\equiv{ Fusão-+, Absorção-+ }
+\just\equiv{ Fusão-+, Absorção-+, Cancelamento-x }
 %
   \ensuremath{\Varid{fk}\comp \alt{\Varid{zero}}{\mathbin{+}\mathrm{1}}\mathrel{=}\alt{\Varid{one}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\conj{\Varid{lk}}{\Varid{fk}})}
   \more
-  \ensuremath{\Varid{lk}\comp \alt{\Varid{zero}}{\mathbin{+}\mathrm{1}}\mathrel{=}\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}\comp (\Varid{id}\mathbin{+}\Varid{lk})}
+  \ensuremath{\Varid{lk}\comp \alt{\Varid{zero}}{\mathbin{+}\mathrm{1}}\mathrel{=}\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}\comp \p2}\comp (\Varid{id}\mathbin{+}\conj{\Varid{fk}}{\Varid{lk}}}
 %
 \just\equiv{ Fokkinga }
 %
-  \ensuremath{\conj{\Varid{fk}}{\Varid{lk}}\mathrel{=}}\cata{\ensuremath{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}}}}
+  \ensuremath{\conj{\Varid{fk}}{\Varid{lk}}\mathrel{=}}\cata{\ensuremath{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}\comp \p2}}}}
 \qed
 \end{eqnarray*}
 
@@ -1610,13 +1610,13 @@ Após obtermos o split de fk e lk, passamos à demonstração do segundo split g
 %
   \ensuremath{\alt{\Varid{g}\comp \Varid{zero}}{\Varid{g}\comp (\mathbin{+}\mathrm{1})}\mathrel{=}\alt{\Varid{one}}{\Varid{mul}\comp \conj{\Varid{s}}{\Varid{g}}}}
   \more
-  \ensuremath{\alt{\Varid{s}\comp \Varid{zero}}{\Varid{s}\comp (\mathbin{+}\mathrm{1})}\mathrel{=}\alt{\mathbin{+}\mathrm{1}}{(\mathbin{+}\mathrm{1})\comp \Varid{s}}}
+  \ensuremath{\alt{\Varid{s}\comp \Varid{zero}}{\Varid{s}\comp (\mathbin{+}\mathrm{1})}\mathrel{=}\alt{\Varid{one}}{\succ \comp \p2\comp \conj{\Varid{g}}{\Varid{s}}}}
 %
-\just\equiv{ Fusão-+, Absorção-+ }
+\just\equiv{ Fusão-+, Absorção-+, Cancelamento-x }
 %
   \ensuremath{\Varid{g}\comp \alt{\Varid{zero}}{\mathbin{+}\mathrm{1}}\mathrel{=}\alt{\Varid{one}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\conj{\Varid{s}}{\Varid{g}})}
   \more
-  \ensuremath{\Varid{s}\comp \alt{\Varid{zero}}{\mathbin{+}\mathrm{1}}\mathrel{=}\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}\comp (\Varid{id}\mathbin{+}\Varid{s})}
+  \ensuremath{\Varid{s}\comp \alt{\Varid{zero}}{\mathbin{+}\mathrm{1}}\mathrel{=}\alt{\Varid{one}}{\mathbin{+}\mathrm{1}\comp \p2}\comp (\Varid{id}\mathbin{+}\conj{\Varid{g}}{\Varid{s}})}
 %
 \just\equiv{ Fokkinga }
 %
@@ -1628,34 +1628,35 @@ Finalmente, ao termos o resultado das duas demonstrações, combinamos os result
 
 \begin{eqnarray*}
 \start
-  \ensuremath{\conj{\cata{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}}}}{\cata{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}}}}}}
+  \ensuremath{\conj{\cata{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}\comp \p2}}}}{\cata{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}\comp \p2}}}}}
 %
 \just\equiv{ Banana-split }
 %
-  \ensuremath{\cata{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}}\times\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}}}\comp \conj{\Conid{F}\;\p1}{\Conid{F}\;\p2}}}
+  \ensuremath{\cata{\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}\comp \p2}}\times\conj{\alt{\Varid{one}}{\Varid{mul}}}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}\comp \p2}}\comp \conj{\Conid{F}\;\p1}{\Conid{F}\;\p2}}}
 %
 \just\equiv{ Absorção-x, Fusão-x }
 %
-  \ensuremath{\cata{\conj{\conj{\alt{\Varid{one}}{\Varid{mul}}\comp \Conid{F}\;\p1}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}\comp \Conid{F}\;\p1}}{\conj{\alt{\Varid{one}}{\Varid{mul}}\comp \Conid{F}\;\p2}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}}\comp \Conid{F}\;\p2}}}}
+  \ensuremath{\cata{\conj{\conj{\alt{\Varid{one}}{\Varid{mul}}\comp \Conid{F}\;\p1}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}\comp \p2}\comp \Conid{F}\;\p1}}{\conj{\alt{\Varid{one}}{\Varid{mul}}\comp \Conid{F}\;\p2}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}\comp \p2}\comp \Conid{F}\;\p2}}}}
 %
 \just\equiv{ Def \ensuremath{\Conid{Ff}\mathrel{=}\Varid{id}\mathbin{+}\Varid{f}} }
 %
-  \ensuremath{\cata{\conj{\conj{\alt{\Varid{one}}{\Varid{mul}}\comp \Varid{id}\mathbin{+}\p1}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}}\comp \Varid{id}\mathbin{+}\p1}}{\conj{\alt{\Varid{one}}{\Varid{mul}}\comp \Varid{id}\mathbin{+}\p2}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}}\comp \Varid{id}\mathbin{+}\p2}}}}
+  \ensuremath{\cata{\conj{\conj{\alt{\Varid{one}}{\Varid{mul}}\comp \Varid{id}\mathbin{+}\p1}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}\comp \p2}\comp \Varid{id}\mathbin{+}\p1}}{\conj{\alt{\Varid{one}}{\Varid{mul}}\comp \Varid{id}\mathbin{+}\p2}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}\comp \p2}\comp \Varid{id}\mathbin{+}\p2}}}}
 %
 \just\equiv{ Absorção-+, Nat-id }
 %
-  \ensuremath{\cata{\conj{\conj{\alt{\Varid{one}}{\Varid{mul}\comp \p1}}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}\comp \p1}}}{\conj{\alt{\Varid{one}}{\Varid{mul}\comp \p2}}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}\comp \p2}}}}}
+  \ensuremath{\cata{\conj{\conj{\alt{\Varid{one}}{\Varid{mul}\comp \p1}}{\alt{\mathbin{+}\mathrm{1}}{\mathbin{+}\mathrm{1}\comp \p2\comp \p1}}}{\conj{\alt{\Varid{one}}{\Varid{mul}\comp \p2}}{\alt{\Varid{one}}{\mathbin{+}\mathrm{1}\comp \p2\comp \p2}}}}}
 %
 \just\equiv{ Lei da Troca \ensuremath{\times} 2 }
 %
-  \ensuremath{\cata{\alt{\conj{\conj{\Varid{one}}{\mathbin{+}\mathrm{1}}}{\conj{\Varid{one}}{\Varid{one}}}}{\conj{\conj{\Varid{mul}\comp \p1}{\mathbin{+}\mathrm{1}\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\mathbin{+}\mathrm{1}\comp \p2}}}}}
+  \ensuremath{\cata{\alt{\conj{\conj{\Varid{one}}{\mathbin{+}\mathrm{1}}}{\conj{\Varid{one}}{\Varid{one}}}}{\conj{\conj{\Varid{mul}\comp \p1}{\mathbin{+}\mathrm{1}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\mathbin{+}\mathrm{1}\comp \p2\comp \p2}}}}}
 %
 \just\equiv{ \ensuremath{\mathsf{for}\ \Varid{loop}\ \Varid{base}\mathrel{=}\cata{\alt{\Varid{base}}{\Varid{loop}}}}, Universal-+ }
 %
-        \ensuremath{\begin{lcbr}\Varid{base}\mathrel{=}\conj{\conj{\Varid{one}}{\mathbin{+}\mathrm{1}}}{\conj{\Varid{one}}{\Varid{one}}}\\\Varid{loop}\mathrel{=}\conj{\conj{\Varid{mul}\comp \p1}{\mathbin{+}\mathrm{1}\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\mathbin{+}\mathrm{1}\comp \p2}}\end{lcbr}} 
+        \ensuremath{\begin{lcbr}\Varid{base}\mathrel{=}\conj{\conj{\Varid{one}}{\mathbin{+}\mathrm{1}}}{\conj{\Varid{one}}{\Varid{one}}}\\\Varid{loop}\mathrel{=}\conj{\conj{\Varid{mul}\comp \p1}{\mathbin{+}\mathrm{1}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\mathbin{+}\mathrm{1}\comp \p2\comp \p2}}\end{lcbr}} 
 \qed
 \end{eqnarray*}
 
+Para podermos aplicar a nossa base e o nosso loop, temos de ter um par de tuplos, como a função recebe 4 inteiros sem serem tuplos, temos de utilizar uma funçao auxiliar flatq ou unflaq de maneira a retornar os tipos corretos, após aplicar a função demonstrada acima.
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
