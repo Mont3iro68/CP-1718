@@ -1316,11 +1316,11 @@ instance Bifunctor FTree where
 
 \subsubsection{1 - generatePTree}
 
-Para gerar uma PTree através de um inteiro temos de aplicar um anamorfismo ao inteiro passado como argumento pela função. Aplicando o nosso "gene" após aplicar o \textit {outNat} ao inteiro obtemos as unidades básicas da nossa árvore e o anamorfismo trata de criar o resto dos nodos da árvore. O último quadrado terá como tamanho de lado 1, os restantes seguem o cálculo $(\sqrt{2} /2) ^ n$.
+Para gerar uma PTree através de um inteiro temos de aplicar um anamorfismo ao inteiro passado como argumento pela função. Aplicando o nosso "gene" após aplicar o \textit {outNat} ao inteiro obtemos as unidades básicas da nossa árvore e o anamorfismo trata de criar o resto dos nodos da árvore. O último quadrado terá como tamanho de lado 1, os restantes seguem o cálculo $ (\sqrt{2})^{x} * \sqrt{2}\2 = (\sqrt{2}) ^ {x-1}$.
 
 \begin{code}
 generatePTree =  anaFTree(g . outNat) 
-                where g = const(1.0) -|- (split (((sqrt(2)/2) ^) . succ) (split id  id))
+                where g = const(1.0) -|- (split (((sqrt(2)) ^) . succ) (split id  id))
 \end{code}   
 
 Posto isto, desenvolvemos o seguinte diagrama:
