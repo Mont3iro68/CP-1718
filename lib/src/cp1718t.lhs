@@ -106,13 +106,13 @@
 
 \begin{center}\large
 \begin{tabular}{ll}
-\textbf{Grupo} nr. & 99 (preencher)
+\textbf{Grupo} nr. & 78
 \\\hline
-a11111 & Nome1 (preencher)	
+a75008 & Filipe Fortunato	
 \\
-a22222 & Nome2 (preencher)	
+a76516 & João Vieira	
 \\
-a33333 & Nome3 (preencher)	
+a74036 & Manuel Monteiro	
 \end{tabular}
 \end{center}
 
@@ -1030,13 +1030,13 @@ Com isto, podemos desenvolver o seguinte diagrama:
     |Transactions|
            \ar[r]^-{\cata{g}}
 & 
-|(Entity >< Value)*|
+|(Entity >< Value)|{^*}
 \ar[d]^-{|collect|}
 \\
      |Transactions|
 &
 &
-     |(Entity >< Value*)*|
+     |(Entity >< Value|{^*}|)|{^*}
            \ar[ll]_-{|map(id><sum)|}
 }
 \end{eqnarray*}
@@ -1044,7 +1044,7 @@ Com isto, podemos desenvolver o seguinte diagrama:
 
 
 \subsubsection{3 - isValidMagicNr}
-Para verificar se não existem MagicNr repitidos na BlockChain, começámos por aplicar um cata-morfismo para obter a lista de MagicNr da mesma. Depois aplicamos um \textit{split id nub} e verificamos a diferença no tuplo criado (a função \textit{nub} remove repetidos da lista) logo se houverem diferenças entre as listas deve-se a haver valores repetidos logo a função retorna False e True no caso de serem as listas iguais.
+Para verificar se não existem MagicNr repetidos na BlockChain, começámos por aplicar um cata-morfismo para obter a lista de MagicNr da mesma. Depois aplicamos um |split id nub| e verificamos a diferença no tuplo criado (a função \textit{nub} remove repetidos da lista) logo se houverem diferenças entre as listas deve-se a haver valores repetidos logo a função retorna False e True no caso de serem as listas iguais.
 
 \begin{code}
 isValidMagicNr = uncurry (==) . split id nub . cataBlockchain(either (singl.p1)  (cons . (p1 >< id))) 
@@ -1057,12 +1057,12 @@ Posto isto, desenvolvemos o seguinte diagrama:
            \ar[d]_-{|isValidMagicNr|}
            \ar[r]^-{|cataBlockchain g|}
 &
-    |MagicNr*|
+    |MagicNr|{^*}
            \ar[d]^-{|split(id) (nub)|}
 \\
      |Bool|
 &
-     |MagicNr* >< MagicNr*|
+     |MagicNr|{^*} |>< MagicNr|{^*}
            \ar[l]_-{|uncurry(==)|}
 }
 \end{eqnarray*}
@@ -1144,7 +1144,7 @@ Posto isto, chegamos ao seguinte diagrama:
   
 \subsubsection{3 - invertQTree}
 
-Para inverter as cores de uma QTree, só é necessário trocar as cores dos pixeis da mesma, isto é subtrair a 255 a cada sub-cor (\textit{vermelho, green, blue}) do pixel. Definindo uma função para tal e utilizar o Functor definido para aplicar a função aos pixeis, obtemos a QTree com as cores invertidas.
+Para inverter as cores de uma QTree, só é necessário trocar as cores dos pixeis da mesma, isto é subtrair a 255 a cada sub-cor (\textit{vermelho, verde e azul}) do pixel. Definindo uma função para tal e utilizar o Functor definido para aplicar a função aos pixeis, obtemos a QTree com as cores invertidas.
 
 \begin{code}
 invertQTree = fmap f where
@@ -1201,7 +1201,7 @@ Para este problema percebemos que as quatro funções auxiliares definidas no pr
 \qed
 \end{eqnarray*}
 
-Após obtermos o split de fk e lk, passamos à demonstração do segundo split g e s:
+Após obtermos o |split fk lk|, passamos à demonstração do segundo |split g s|:
 
 \begin{eqnarray*}
 \start
@@ -1273,7 +1273,7 @@ Finalmente, ao termos o resultado das duas demonstrações, combinamos os result
 \qed
 \end{eqnarray*}
 
-Para podermos aplicar a nossa base e o nosso loop, temos de ter um par de tuplos, como a função recebe 4 inteiros sem serem tuplos, temos de utilizar uma funçao auxiliar flatq ou unflaq de maneira a retornar os tipos corretos, após aplicar a função demonstrada acima.
+Para podermos aplicar a nossa base e o nosso loop, temos de ter um par de tuplos, como a função recebe 4 inteiros sem serem tuplos, temos de utilizar uma função auxiliar |flatq| ou |unflaq| de maneira a retornar os tipos corretos, após aplicar a função demonstrada acima.
 
 \begin{code}
 
@@ -1316,7 +1316,7 @@ instance Bifunctor FTree where
 
 \subsubsection{1 - generatePTree}
 
-Para gerar uma PTree através de um inteiro temos de aplicar um anamorfismo ao inteiro passado como argumento pela função. Aplicando o nosso "gene" após aplicar o \textit {outNat} ao inteiro obtemos as unidades básicas da nossa árvore e o anamorfismo trata de criar o resto dos nodos da árvore. O último quadrado terá como tamanho de lado 1, os restantes seguem o cálculo $ (\sqrt{2})^{x} * \sqrt{2}\2 = (\sqrt{2}) ^ {x-1}$.
+Para gerar uma PTree através de um inteiro temos de aplicar um anamorfismo ao inteiro passado como argumento pela função. Aplicando o nosso "gene" após aplicar o \textit {outNat} ao inteiro obtemos as unidades básicas da nossa árvore e o anamorfismo trata de criar o resto dos nodos da árvore. O último quadrado terá como tamanho de lado 1, os restantes seguem o cálculo $ (\sqrt{2})^{x} * \frac{\sqrt{2}}{2} = (\sqrt{2}) ^ {x-1}$.
 
 \begin{code}
 generatePTree =  anaFTree(g . outNat) 
@@ -1350,13 +1350,67 @@ drawPTree = undefined
 
 \subsection*{Problema 5}
 
+\subsubsection{singletonbag}
+Esta função apenas recebe a cor e cria um Bag com apenas um berlinde dessa cor, daí o nome \textit{singletonbag}. Para isso apenas necessitamos de criar o par com o |split (id) (count)| aplicando a identidade, ou seja, ficamos com a cor passada na função no lado esquerdo e no lado direito apenas é posto o número um representando apenas o berlinde que o saco contém. Como um Bag é uma lista contendo esses tuplos, temos de aplicar a \textbf{singl} antes de aplicar o construtor do Bag. 
+
 \begin{code}
+
 singletonbag =   B . singl . split (id) (const 1)
+
+\end{code}
+
+Podemos chegar ao seguinte diagrama da função:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Cor|
+           \ar[d]_-{|singletonbag|}
+           \ar[r]^-{|split (id) (one)|}
+&
+    |Cor >< one|
+           \ar[d]^-{|singl|}
+\\
+     |Bag|
+&
+     |(Cor >< one)|{^*}
+           \ar[l]_-{|B|}
+}
+\end{eqnarray*}
+
+\subsubsection{muB}
+Para multiplicarmos Bag's dentro de Bag's para devolver apenas um Bag, primeiro teremos de aplicar um \textit{fmap} que é o functor de bags, para fazermos \textit{unB} aos Bag's que estão no Bag. Após isto, fazemos o \textit{unB} ao Bag, e de seguida aplicamos um \textit{map} a esse Bag e esse map irá aplicar outro |map| aos Bag's desse Bag multiplicando o valor do Bag de fora com os de dentro. Esse map retorna-nos uma lista de [(a,Int)] daí fazermos o \textit{concat} a esse tipo , e aplicando o construtor \textit{B} ficando assim apenas com um Bag já multiplicado.   
+
+\begin{code}
 muB = B . concat . map(muBAux) . unB . fmap unB
 
 muBAux :: ([(a,Int)],Int) -> [(a,Int)]
 muBAux (x,y) = map (id >< (y*)) x
 
+\end{code}
+
+O diagrama desta função demonstra-se da seguinte maneira:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Bag(Bag)|
+           \ar[d]_-{|muB|}
+           \ar[r]^-{|unB . fmap unB|}
+&
+    |((Cor >< Int)|{^*}|>< Int)|{^*}
+           \ar[d]^-{|concat . map(muBAux)|}
+\\
+     |Bag|
+&
+     |(Cor >< Int)|{^*}
+           \ar[l]_-{|B|}
+}
+\end{eqnarray*}
+
+\subsubsection{dist}
+
+Para saber a distribuição de cada cor num bag, primeiro temos de calcular o número de berlindes do bag, ou seja somar os berlindes de cada cor, ficando com uma lista só do segundo tuplo, e somando-a temos os berlindes todos de um Bag. Se fizermos um |split (id) count| obtemos um tuplo sendo o primeiro elemento a lista original do Bag de berlindes e o segundo a contagem de berlindes desse Bag. Depois basta aplicarmos um |map| à lista que consiste apenas em dividir o número de berlindes de cada cor pelo total de berlindes calculado. Após aplicado o |map|, temos uma lista de tuplos \textit{(Cor,Float)} e basta-nos aplicar o construtor \textit{D} para obter uma Distribuição.     
+
+\begin{code}
 
 dist = D . distAux . split (id) (count) . unB
      where count = sum . (map p2)
@@ -1364,8 +1418,25 @@ dist = D . distAux . split (id) (count) . unB
 distAux :: ([(a,Int)],Int) -> [(a,Float)]
 distAux (x,y) = map (\(x1,x2)-> (x1,toFloat(x2) / toFloat(y))) x
 
-
 \end{code}
+
+Podemos então desenhar um diagrama que traduz a nossa função:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Bag|
+           \ar[d]_-{|dist|}
+           \ar[r]^-{|unB|}
+&
+    |(Cor >< Int)|{^*}
+           \ar[d]^-{|split id count|}
+\\
+     |Dist|
+&
+     |((Cor >< Int)|{^*}|>< Int)|
+           \ar[l]_-{|D . distAux|}
+}
+\end{eqnarray*}
 
 \section{Como exprimir cálculos e diagramas em LaTeX/lhs2tex}
 Estudar o texto fonte deste trabalho para obter o efeito:\footnote{Exemplos tirados de \cite{Ol18}.} 

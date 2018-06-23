@@ -296,13 +296,13 @@
 
 \begin{center}\large
 \begin{tabular}{ll}
-\textbf{Grupo} nr. & 99 (preencher)
+\textbf{Grupo} nr. & 78
 \\\hline
-a11111 & Nome1 (preencher)	
+a75008 & Filipe Fortunato	
 \\
-a22222 & Nome2 (preencher)	
+a76516 & João Vieira	
 \\
-a33333 & Nome3 (preencher)	
+a74036 & Manuel Monteiro	
 \end{tabular}
 \end{center}
 
@@ -1380,13 +1380,13 @@ Com isto, podemos desenvolver o seguinte diagrama:
     \ensuremath{\Conid{Transactions}}
            \ar[r]^-{\cata{g}}
 & 
-\ensuremath{(\Conid{Entity}\times\Conid{Value})\mathbin{*}}
+\ensuremath{(\Conid{Entity}\times\Conid{Value})}{^*}
 \ar[d]^-{\ensuremath{\Varid{collect}}}
 \\
      \ensuremath{\Conid{Transactions}}
 &
 &
-     \ensuremath{(\Conid{Entity}\times\Conid{Value}\mathbin{*})\mathbin{*}}
+     \ensuremath{(\Conid{Entity}\times\Conid{Value}}{^*}\ensuremath{)}{^*}
            \ar[ll]_-{\ensuremath{\map \;(\Varid{id}\times\Varid{sum})}}
 }
 \end{eqnarray*}
@@ -1394,7 +1394,7 @@ Com isto, podemos desenvolver o seguinte diagrama:
 
 
 \subsubsection{3 - isValidMagicNr}
-Para verificar se não existem MagicNr repitidos na BlockChain, começámos por aplicar um cata-morfismo para obter a lista de MagicNr da mesma. Depois aplicamos um \textit{split id nub} e verificamos a diferença no tuplo criado (a função \textit{nub} remove repetidos da lista) logo se houverem diferenças entre as listas deve-se a haver valores repetidos logo a função retorna False e True no caso de serem as listas iguais.
+Para verificar se não existem MagicNr repetidos na BlockChain, começámos por aplicar um cata-morfismo para obter a lista de MagicNr da mesma. Depois aplicamos um \ensuremath{\conj{\Varid{id}}{\Varid{nub}}} e verificamos a diferença no tuplo criado (a função \textit{nub} remove repetidos da lista) logo se houverem diferenças entre as listas deve-se a haver valores repetidos logo a função retorna False e True no caso de serem as listas iguais.
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1412,12 +1412,12 @@ Posto isto, desenvolvemos o seguinte diagrama:
            \ar[d]_-{\ensuremath{\Varid{isValidMagicNr}}}
            \ar[r]^-{\ensuremath{\Varid{cataBlockchain}\;\Varid{g}}}
 &
-    \ensuremath{\Conid{MagicNr}\mathbin{*}}
+    \ensuremath{\Conid{MagicNr}}{^*}
            \ar[d]^-{\ensuremath{\conj{\Varid{id}}{\Varid{nub}}}}
 \\
      \ensuremath{\Conid{Bool}}
 &
-     \ensuremath{\Conid{MagicNr}\mathbin{*}\times\Conid{MagicNr}\mathbin{*}}
+     \ensuremath{\Conid{MagicNr}}{^*} \ensuremath{\times\Conid{MagicNr}}{^*}
            \ar[l]_-{\ensuremath{\uncurry{(\equiv )}}}
 }
 \end{eqnarray*}
@@ -1527,7 +1527,7 @@ Posto isto, chegamos ao seguinte diagrama:
   
 \subsubsection{3 - invertQTree}
 
-Para inverter as cores de uma QTree, só é necessário trocar as cores dos pixeis da mesma, isto é subtrair a 255 a cada sub-cor (\textit{vermelho, green, blue}) do pixel. Definindo uma função para tal e utilizar o Functor definido para aplicar a função aos pixeis, obtemos a QTree com as cores invertidas.
+Para inverter as cores de uma QTree, só é necessário trocar as cores dos pixeis da mesma, isto é subtrair a 255 a cada sub-cor (\textit{vermelho, verde e azul}) do pixel. Definindo uma função para tal e utilizar o Functor definido para aplicar a função aos pixeis, obtemos a QTree com as cores invertidas.
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1594,7 +1594,7 @@ Para este problema percebemos que as quatro funções auxiliares definidas no pr
 \qed
 \end{eqnarray*}
 
-Após obtermos o split de fk e lk, passamos à demonstração do segundo split g e s:
+Após obtermos o \ensuremath{\conj{\Varid{fk}}{\Varid{lk}}}, passamos à demonstração do segundo \ensuremath{\conj{\Varid{g}}{\Varid{s}}}:
 
 \begin{eqnarray*}
 \start
@@ -1656,7 +1656,7 @@ Finalmente, ao termos o resultado das duas demonstrações, combinamos os result
 \qed
 \end{eqnarray*}
 
-Para podermos aplicar a nossa base e o nosso loop, temos de ter um par de tuplos, como a função recebe 4 inteiros sem serem tuplos, temos de utilizar uma funçao auxiliar flatq ou unflaq de maneira a retornar os tipos corretos, após aplicar a função demonstrada acima.
+Para podermos aplicar a nossa base e o nosso loop, temos de ter um par de tuplos, como a função recebe 4 inteiros sem serem tuplos, temos de utilizar uma função auxiliar \ensuremath{\Varid{flatq}} ou \ensuremath{\Varid{unflaq}} de maneira a retornar os tipos corretos, após aplicar a função demonstrada acima.
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1726,20 +1726,20 @@ Tal como nos problemas 1 e 2 definimos agora para a estrutura FTree, o isomorfis
 
 \subsubsection{1 - generatePTree}
 
-Para gerar uma PTree através de um inteiro temos de aplicar um anamorfismo ao inteiro passado como argumento pela função. Aplicando o nosso "gene" após aplicar o \textit {outNat} ao inteiro obtemos as unidades básicas da nossa árvore e o anamorfismo trata de criar o resto dos nodos da árvore. O último quadrado terá como tamanho de lado 1, os restantes seguem o cálculo $(\sqrt{2} /2) ^ n$.
+Para gerar uma PTree através de um inteiro temos de aplicar um anamorfismo ao inteiro passado como argumento pela função. Aplicando o nosso "gene" após aplicar o \textit {outNat} ao inteiro obtemos as unidades básicas da nossa árvore e o anamorfismo trata de criar o resto dos nodos da árvore. O último quadrado terá como tamanho de lado 1, os restantes seguem o cálculo $ (\sqrt{2})^{x} * \frac{\sqrt{2}}{2} = (\sqrt{2}) ^ {x-1}$.
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{17}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{18}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{85}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{83}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{generatePTree}\mathrel{=}{}\<[18]%
 \>[18]{}\Varid{anaFTree}\;(\Varid{g}\comp \Varid{outNat}){}\<[E]%
 \\
 \>[B]{}\hsindent{17}{}\<[17]%
-\>[17]{}\mathbf{where}\;\Varid{g}\mathrel{=}\underline{(\mathrm{1.0})}+\conj{((\Varid{sqrt}\;(\mathrm{2})\mathbin{/}\mathrm{2})\mathbin{\uparrow})\comp \succ }{\conj{\Varid{id}}{{}\<[85]%
-\>[85]{}\Varid{id}}}{}\<[E]%
+\>[17]{}\mathbf{where}\;\Varid{g}\mathrel{=}\underline{(\mathrm{1.0})}+\conj{((\Varid{sqrt}\;(\mathrm{2}))\mathbin{\uparrow})\comp \succ }{\conj{\Varid{id}}{{}\<[83]%
+\>[83]{}\Varid{id}}}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1773,24 +1773,104 @@ Posto isto, desenvolvemos o seguinte diagrama:
 
 \subsection*{Problema 5}
 
+\subsubsection{singletonbag}
+Esta função apenas recebe a cor e cria um Bag com apenas um berlinde dessa cor, daí o nome \textit{singletonbag}. Para isso apenas necessitamos de criar o par com o \ensuremath{\conj{\Varid{id}}{\Varid{count}}} aplicando a identidade, ou seja, ficamos com a cor passada na função no lado esquerdo e no lado direito apenas é posto o número um representando apenas o berlinde que o saco contém. Como um Bag é uma lista contendo esses tuplos, temos de aplicar a \textbf{singl} antes de aplicar o construtor do Bag. 
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{18}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{singletonbag}\mathrel{=}{}\<[18]%
 \>[18]{}\mathit B\comp \Varid{singl}\comp \conj{\Varid{id}}{\underline{\mathrm{1}}}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Podemos chegar ao seguinte diagrama da função:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Cor}}
+           \ar[d]_-{\ensuremath{\Varid{singletonbag}}}
+           \ar[r]^-{\ensuremath{\conj{\Varid{id}}{\Varid{one}}}}
+&
+    \ensuremath{\Conid{Cor}\times\Varid{one}}
+           \ar[d]^-{\ensuremath{\Varid{singl}}}
 \\
+     \ensuremath{\Conid{Bag}}
+&
+     \ensuremath{(\Conid{Cor}\times\Varid{one})}{^*}
+           \ar[l]_-{\ensuremath{\mathit B}}
+}
+\end{eqnarray*}
+
+\subsubsection{muB}
+Para multiplicarmos Bag's dentro de Bag's para devolver apenas um Bag, primeiro teremos de aplicar um \textit{fmap} que é o functor de bags, para fazermos \textit{unB} aos Bag's que estão no Bag. Após isto, fazemos o \textit{unB} ao Bag, e de seguida aplicamos um \textit{map} a esse Bag e esse map irá aplicar outro \ensuremath{\map } aos Bag's desse Bag multiplicando o valor do Bag de fora com os de dentro. Esse map retorna-nos uma lista de [(a,Int)] daí fazermos o \textit{concat} a esse tipo , e aplicando o construtor \textit{B} ficando assim apenas com um Bag já multiplicado.   
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\mu \mathrel{=}\mathit B\comp \Varid{concat}\comp \map \;(\Varid{muBAux})\comp \Varid{unB}\comp \mathsf{fmap}\;\Varid{unB}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{muBAux}\mathbin{::}([\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu],\Conid{Int})\to [\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu]{}\<[E]%
 \\
 \>[B]{}\Varid{muBAux}\;(\Varid{x},\Varid{y})\mathrel{=}\map \;(\Varid{id}\times(\Varid{y}\mathbin{*}))\;\Varid{x}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{dist}\mathrel{=}\bot {}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment  count = sum . p2  . unB}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+
+O diagrama desta função demonstra-se da seguinte maneira:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Bag}\;(\Conid{Bag})}
+           \ar[d]_-{\ensuremath{\mu }}
+           \ar[r]^-{\ensuremath{\Varid{unB}\comp \mathsf{fmap}\;\Varid{unB}}}
+&
+    \ensuremath{((\Conid{Cor}\times\Conid{Int})}{^*}\ensuremath{\times\Conid{Int})}{^*}
+           \ar[d]^-{\ensuremath{\Varid{concat}\comp \map \;(\Varid{muBAux})}}
+\\
+     \ensuremath{\Conid{Bag}}
+&
+     \ensuremath{(\Conid{Cor}\times\Conid{Int})}{^*}
+           \ar[l]_-{\ensuremath{\mathit B}}
+}
+\end{eqnarray*}
+
+\subsubsection{dist}
+
+Para saber a distribuição de cada cor num bag, primeiro temos de calcular o número de berlindes do bag, ou seja somar os berlindes de cada cor, ficando com uma lista só do segundo tuplo, e somando-a temos os berlindes todos de um Bag. Se fizermos um \ensuremath{\conj{\Varid{id}}{\Varid{count}}} obtemos um tuplo sendo o primeiro elemento a lista original do Bag de berlindes e o segundo a contagem de berlindes desse Bag. Depois basta aplicarmos um \ensuremath{\map } à lista que consiste apenas em dividir o número de berlindes de cada cor pelo total de berlindes calculado. Após aplicado o \ensuremath{\map }, temos uma lista de tuplos \textit{(Cor,Float)} e basta-nos aplicar o construtor \textit{D} para obter uma Distribuição.     
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{6}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{dist}\mathrel{=}\Conid{D}\comp \Varid{distAux}\comp \conj{\Varid{id}}{\Varid{count}}\comp \Varid{unB}{}\<[E]%
+\\
+\>[B]{}\hsindent{6}{}\<[6]%
+\>[6]{}\mathbf{where}\;\Varid{count}\mathrel{=}\Varid{sum}\comp (\map \;\p2){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{distAux}\mathbin{::}([\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu],\Conid{Int})\to [\mskip1.5mu (\Varid{a},\Conid{Float})\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{distAux}\;(\Varid{x},\Varid{y})\mathrel{=}\map \;(\lambda (\Varid{x1},\Varid{x2})\to (\Varid{x1},\Varid{toFloat}\;(\Varid{x2})\mathbin{/}\Varid{toFloat}\;(\Varid{y})))\;\Varid{x}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Podemos então desenhar um diagrama que traduz a nossa função:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Bag}}
+           \ar[d]_-{\ensuremath{\Varid{dist}}}
+           \ar[r]^-{\ensuremath{\Varid{unB}}}
+&
+    \ensuremath{(\Conid{Cor}\times\Conid{Int})}{^*}
+           \ar[d]^-{\ensuremath{\conj{\Varid{id}}{\Varid{count}}}}
+\\
+     \ensuremath{\fun{Dist}}
+&
+     \ensuremath{((\Conid{Cor}\times\Conid{Int})}{^*}\ensuremath{\times\Conid{Int})}
+           \ar[l]_-{\ensuremath{\Conid{D}\comp \Varid{distAux}}}
+}
+\end{eqnarray*}
 
 \section{Como exprimir cálculos e diagramas em LaTeX/lhs2tex}
 Estudar o texto fonte deste trabalho para obter o efeito:\footnote{Exemplos tirados de \cite{Ol18}.} 
