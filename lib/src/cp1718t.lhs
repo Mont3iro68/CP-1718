@@ -1358,9 +1358,12 @@ muBAux :: ([(a,Int)],Int) -> [(a,Int)]
 muBAux (x,y) = map (id >< (y*)) x
 
 
-dist = undefined  
-     
--- count = sum . p2  . unB
+dist = D . distAux . split (id) (count) . unB
+     where count = sum . (map p2)
+
+distAux :: ([(a,Int)],Int) -> [(a,Float)]
+distAux (x,y) = map (\(x1,x2)-> (x1,toFloat(x2) / toFloat(y))) x
+
 
 \end{code}
 
